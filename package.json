@@ -1,0 +1,95 @@
+{
+  "name": "snoowrap",
+  "version": "1.23.0",
+  "license": "MIT",
+  "description": "A JavaScript wrapper for the reddit API",
+  "main": "dist/snoowrap.js",
+  "types": "dist/snoowrap.d.ts",
+  "scripts": {
+    "prepublishOnly": "npm run compile",
+    "prepare": "npm run compile",
+    "compile": "npm run type-check && npm run build:babel && npm run build:types && node ./scripts/copyTSTypes.js",
+    "lint": "eslint --ignore-path .gitignore . --cache",
+    "test": "npm run lint && npm run test:mocha",
+    "test:mocha": "npm run compile && mocha --require @babel/register test/snoowrap.spec.js",
+    "test:browser": "npm run compile && browserify --im test/snoowrap.spec.js -o test/_browser.spec.js -t [ babelify ] && five-server --ignore=** --open=/test/run-tests.html",
+    "smoketest": "npm run test -- -g 'smoketest'",
+    "browser": "npm run compile && browserify --im browser/index.js -o browser/_index.js -t [ babelify ] && five-server --ignore=** --open=/browser/index.html",
+    "build-docs": "npm run build:docs",
+    "build:docs": "scripts/build_docs.sh",
+    "build:babel": "babel -d dist/ src/",
+    "build:types": "tsc -p tsconfig.gen-dts.json",
+    "bundle-size": "npm run build-docs && gzip -c doc/snoowrap-v$(npm info . version).min.js | wc -c | xargs",
+    "coverage": "istanbul cover _mocha -- --require @babel/register test/snoowrap.spec.js",
+    "type-check": "tsc -p tsconfig.typecheck.json"
+  },
+  "files": [
+    "dist/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/not-an-aardvark/snoowrap.git"
+  },
+  "keywords": [
+    "reddit",
+    "api",
+    "wrapper",
+    "praw",
+    "snoo"
+  ],
+  "author": "not-an-aardvark <not-an-aardvark@users.noreply.github.com>",
+  "bugs": {
+    "url": "https://github.com/not-an-aardvark/snoowrap/issues"
+  },
+  "homepage": "https://github.com/not-an-aardvark/snoowrap",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bluebird": "^3.7.2",
+    "form-data": "^4.0.0",
+    "lodash": "^4.17.15",
+    "ws": "^3.3.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.9",
+    "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
+    "@babel/plugin-transform-arrow-functions": "^7.16.7",
+    "@babel/plugin-transform-async-to-generator": "^7.16.8",
+    "@babel/plugin-transform-block-scoping": "^7.16.7",
+    "@babel/plugin-transform-destructuring": "^7.17.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.17.9",
+    "@babel/plugin-transform-parameters": "^7.16.7",
+    "@babel/plugin-transform-spread": "^7.16.7",
+    "@babel/plugin-transform-template-literals": "^7.16.7",
+    "@babel/plugin-transform-typescript": "^7.16.8",
+    "@babel/register": "^7.17.7",
+    "@types/node": "20.11.5",
+    "@types/request": "^2.48.8",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "babelify": "^10.0.0",
+    "browserify": "^13.1.0",
+    "chai": "^3.5.0",
+    "dirty-chai": "^1.2.2",
+    "eslint": "^6.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "five-server": "0.0.28",
+    "fs-extra": "^8.1.0",
+    "ink-docstrap": "^1.2.1",
+    "istanbul": "^1.0.0-alpha.2",
+    "mocha": "^6.0.0",
+    "moment": "^2.14.1",
+    "typescript": "5.3.3",
+    "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#1db50c3b169ee4195e1935013d6721628eb5b4bd"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "browser": {
+    "fs": false,
+    "util": false,
+    "ws": false,
+    "form-data": false
+  }
+}
